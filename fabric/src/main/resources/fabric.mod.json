@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
-  "id": "examplemod",
+  "id": "jamd",
   "version": "${version}",
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Just Another Mining Dimesnion",
+  "description": "A Mining Dimesnion Mod now for Forge and Fabric",
   "authors": [
-    "Me!"
+    "UnRealDinnerbone"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
-  "license": "Insert License Here",
-  "icon": "assets/examplemod/icon.png",
+  "license": "All Rights Reserved unless stated otherwise. Distrubtion permssion is given to FeedTheBeast and CurseForge for use in modpacks",
+  "icon": "assets/jamd/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.examplemod.fabric.ExampleModFabric"
+      "com.unrealdinnerbone.jamd.fabric.JamdFabric"
     ]
   },
   "depends": {

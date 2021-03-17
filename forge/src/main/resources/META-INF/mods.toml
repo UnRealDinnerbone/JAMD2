@@ -1,33 +1,33 @@
 modLoader = "javafml"
 loaderVersion = "[35,)"
-#issueTrackerURL = ""
-license = "Insert License Here"
+issueTrackerURL = "https://github.com/UnRealDinnerbone/JAMD2/issues"
+license = "All Rights Reserved unless stated otherwise. Distrubtion permssion is given to FeedTheBeast and CurseForge for use in modpacks"
 
 [[mods]]
-modId = "examplemod"
+modId = "jamd"
 version = "${version}"
-displayName = "Example Mod"
-authors = "Me!"
+displayName = "Just Another Mining Dimesnion"
+authors = "UnRealDinnerbone"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+A Mining Dimesnion Mod now for Forge and Fabric
 '''
-#logoFile = ""
+logoFile = "icon.png"
 
-[[dependencies.examplemod]]
+[[dependencies.jamd]]
 modId = "forge"
 mandatory = true
 versionRange = "[35,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.examplemod]]
+[[dependencies.jamd]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.16.2,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.examplemod]]
+[[dependencies.jamd]]
 modId = "architectury"
 mandatory = true
 versionRange = "[1.1.55,)"

@@ -1,7 +1,13 @@
 plugins {
     id "architectury-plugin" version "3.0-SNAPSHOT"
     id "forgified-fabric-loom" version "0.6-SNAPSHOT" apply false
+    id "com.matthewprenger.cursegradle" version "1.4.0" apply false
 }
+
+apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/master/generic/markdown-git-changelog.gradle'
+apply from: "https://raw.githubusercontent.com/UnRealDinnerbone/GradleHelpers/master/version.gradle"
+
+task curseforgePublish
 
 architectury {
     minecraft = rootProject.minecraft_version
@@ -16,12 +22,10 @@ subprojects {
 
     dependencies {
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        // The following line declares the mojmap mappings, you may use other mappings as well
         mappings loom.officialMojangMappings()
-        // The following line declares the yarn mappings you may select this one as well.
-        // mappings "net.fabricmc:yarn:1.16.5+build.4"
     }
 }
+
 
 allprojects {
     apply plugin: "java"
@@ -29,10 +33,11 @@ allprojects {
     apply plugin: "maven-publish"
 
     archivesBaseName = rootProject.archives_base_name
-    version = rootProject.mod_version
+    version = getVersionNumber();
     group = rootProject.maven_group
 
     repositories {
+
         // Add repositories to retrieve artifacts from in here.
         // You should only use this when depending on other mods because
         // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
@@ -56,3 +61,6 @@ allprojects {
         withSourcesJar()
     }
 }
+
+
+

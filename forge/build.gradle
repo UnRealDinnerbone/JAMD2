@@ -1,5 +1,6 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "5.0.0"
+    id "com.matthewprenger.cursegradle"
 }
 
 configurations {
@@ -19,6 +20,7 @@ dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
     // Remove the next line if you don't want to depend on the API
     modApi "me.shedaniel:architectury-forge:${rootProject.architectury_version}"
+    modCompile "me.shedaniel.cloth:cloth-config-forge:${rootProject.cloth_config_version}"
 
     implementation(project(path: ":common")) {
         transitive = false
@@ -85,3 +87,19 @@ publishing {
         // Add repositories to publish to here.
     }
 }
+
+curseforge {
+    if (System.getenv().unreal_curse_api_key) apiKey = System.getenv().unreal_curse_api_key
+    project {
+        id = project.property("curseforge_id")
+        changelog = getGitChangelog()
+        changelogType = 'markdown'
+        releaseType = project.property("type")
+        addGameVersion minecraft_version
+        addGameVersion 'Forge'
+    }
+}
+
+
+
+rootProject.tasks.getByName("curseforgePublish").dependsOn tasks.getByName("curseforge")
