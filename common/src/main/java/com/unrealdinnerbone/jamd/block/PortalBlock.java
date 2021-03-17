@@ -1,96 +1,99 @@
 package com.unrealdinnerbone.jamd.block;
 
-import com.unrealdinnerbone.jamd.JAMD;
-import com.unrealdinnerbone.jamd.util.TelerportUtils;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ToolType;
+import com.unrealdinnerbone.jamd.Jamd;
+import com.unrealdinnerbone.jamd.TelerportUtils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class PortalBlock extends Block {
+public class PortalBlock extends Block implements EntityBlock {
 
 
     public PortalBlock() {
-        super(AbstractBlock.Properties.create(Material.ROCK).setRequiresTool().hardnessAndResistance(5.0F, 6.0F).sound(SoundType.STONE));
+        super(BlockBehaviour.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.STONE));
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult rayTraceResult) {
-        if (!world.isRemote) {
+    public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
+        super.onPlace(blockState, level, blockPos, blockState2, bl);
+    }
+
+    @Override
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        if (!level.isClientSide()) {
             try {
-                TelerportUtils.teleport(this, playerEntity, getWorldFromTileEntity(world, blockPos).orElseThrow(() -> new RuntimeException("Invalid world ID set")), blockPos);
+                TelerportUtils.teleport(this, player, getWorldFromTileEntity(level, blockPos).orElseThrow(() -> new RuntimeException("Invalid world ID set")), blockPos);
             } catch (Exception e) {
-                playerEntity.sendStatusMessage(new StringTextComponent(e.getMessage()), false);
+                player.displayClientMessage(new TextComponent(e.getMessage()), false);
             }
-            return ActionResultType.PASS;
+            return InteractionResult.PASS;
         }else {
-            return ActionResultType.FAIL;
+            return InteractionResult.FAIL;
         }
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if(!worldIn.isRemote()) {
-            TileEntity tileEntity = worldIn.getTileEntity(pos);
-            if(tileEntity instanceof PortalTileEntity) {
-                PortalTileEntity portalTileEntity = (PortalTileEntity) tileEntity;
+    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
+        if(!level.isClientSide()) {
+            BlockEntity blockEntity = level.getBlockEntity(blockPos);
+            if(blockEntity instanceof PortalTileEntity) {
+                PortalTileEntity portalTileEntity = (PortalTileEntity) blockEntity;
                 if(portalTileEntity.getWorldId() != null) {
-                    if(!worldIn.getDimensionKey().equals(World.OVERWORLD)) {
-                        portalTileEntity.setWorldId(World.OVERWORLD.getLocation());
+                    if(!level.dimension().equals(Level.OVERWORLD)) {
+                        portalTileEntity.setWorldId(Level.OVERWORLD.location());
                     }else {
-                        portalTileEntity.setWorldId(JAMD.DIM_ID);
+                        portalTileEntity.setWorldId(Jamd.DIM_ID);
                     }
-                    portalTileEntity.markDirty();
+                    portalTileEntity.setChanged();
                 }
             }
         }
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+        super.setPlacedBy(level, blockPos, blockState, livingEntity, itemStack);
     }
 
-    public static void placeBlock(Block block, World world, BlockPos blockPos, RegistryKey<World> portalTo) {
-        world.setBlockState(blockPos, block.getDefaultState());
-        TileEntity tileEntity = world.getTileEntity(blockPos);
+
+    public static void placeBlock(Block block, Level level, BlockPos blockPos, ResourceKey<Level> portalTo) {
+        level.setBlockAndUpdate(blockPos, block.defaultBlockState());
+        BlockEntity tileEntity = level.getBlockEntity(blockPos);
         if(tileEntity instanceof PortalTileEntity) {
-            ((PortalTileEntity) tileEntity).setWorldId(portalTo.getLocation());
-            tileEntity.markDirty();
+            ((PortalTileEntity) tileEntity).setWorldId(portalTo.location());
+            tileEntity.setChanged();
         }
     }
 
-    public static Optional<World> getWorldFromTileEntity(World world, BlockPos blockPos) {
-        TileEntity tileEntity = world.getTileEntity(blockPos);
-        if (tileEntity instanceof PortalTileEntity) {
-            PortalTileEntity portalTileEntity = (PortalTileEntity) tileEntity;
+    public static Optional<Level> getWorldFromTileEntity(Level level, BlockPos blockPos) {
+        BlockEntity blockEntity = level.getBlockEntity(blockPos);
+        if (blockEntity instanceof PortalTileEntity) {
+            PortalTileEntity portalTileEntity = (PortalTileEntity) blockEntity;
             if (portalTileEntity.getWorldId() != null) {
-                return Optional.ofNullable(world.getServer().getWorld(RegistryKey.getOrCreateKey(Registry.WORLD_KEY, portalTileEntity.getWorldId())));
+                return Optional.ofNullable(level.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, portalTileEntity.getWorldId())));
             }
         }
         return Optional.empty();
     }
 
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity newBlockEntity(BlockGetter blockGetter) {
         return new PortalTileEntity();
     }
 }

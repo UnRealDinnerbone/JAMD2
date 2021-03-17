@@ -1,21 +1,19 @@
 package com.unrealdinnerbone.jamd.block;
 
-import com.unrealdinnerbone.jamd.JAMDRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
+import com.unrealdinnerbone.jamd.Jamd;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-
-public class PortalTileEntity extends TileEntity {
+public class PortalTileEntity extends BlockEntity {
 
     private ResourceLocation worldId;
 
     public PortalTileEntity() {
-        super(JAMDRegistry.PORTAL.get());
+        super(Jamd.PORTAL_BLOCK_ENTITY.get());
     }
 
     public void setWorldId(ResourceLocation worldId) {
@@ -26,45 +24,46 @@ public class PortalTileEntity extends TileEntity {
         return worldId == null ? new ResourceLocation("minecraft", "empty") : worldId;
     }
 
+
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        compound.putString("world_id", getTheWorldId());
-        return super.write(compound);
+    public CompoundTag save(CompoundTag compoundTag) {
+        compoundTag.putString("world_id", getTheWorldId());
+        return super.save(compoundTag);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
-        if(nbt.contains("world_id")) {
-            worldId = ResourceLocation.tryCreate(nbt.getString("world_id"));
+    public void load(BlockState blockState, CompoundTag compoundTag) {
+        if(compoundTag.contains("world_id")) {
+            worldId = ResourceLocation.tryParse(compoundTag.getString("world_id"));
         }
-        super.read(state, nbt);
+        super.load(blockState, compoundTag);
     }
 
 
     @Nullable
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        CompoundNBT compoundNBT = new CompoundNBT();
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        CompoundTag compoundNBT = new CompoundTag();
         compoundNBT.putString("world_id", getTheWorldId());
-        return new SUpdateTileEntityPacket(getPos(), 0, compoundNBT);
+        return new ClientboundBlockEntityDataPacket(getBlockPos(), 0, compoundNBT);
     }
 
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        CompoundNBT nbt = pkt.getNbtCompound();
-        if(nbt.contains("world_id")) {
-            worldId = ResourceLocation.tryCreate(nbt.getString("world_id"));
-        }
-
-    }
+//    @Override
+//    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+//        CompoundNBT nbt = pkt.getNbtCompound();
+//        if(nbt.contains("world_id")) {
+//            worldId = ResourceLocation.tryCreate(nbt.getString("world_id"));
+//        }
+//
+//    }
 
     public String getTheWorldId() {
         return worldId == null ? "" : worldId.toString();
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT compoundNBT = new CompoundNBT();
+    public CompoundTag getUpdateTag() {
+        CompoundTag compoundNBT = new CompoundTag();
         compoundNBT.putString("world_id", getTheWorldId());
         return compoundNBT;
     }
