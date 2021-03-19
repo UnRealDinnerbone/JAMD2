@@ -34,7 +34,6 @@ public class TelerportUtils {
         if(worldTo.getBlockState(fromPos).getBlock() == Jamd.PORTAL_BLOCK.get() && isSafeSpawnLocation(worldTo, fromPos)) {
             return Optional.of(fromPos.above());
         }
-
         int range = 5;
         return Optional.ofNullable(ChunkPos.rangeClosed(worldTo.getChunkAt(fromPos).getPos(), range)
                 .map(chunkPos -> worldTo.getChunk(chunkPos.x, chunkPos.z).getBlockEntitiesPos())
