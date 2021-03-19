@@ -26,7 +26,6 @@ public class TelerportUtils {
             if(playerEntity instanceof ServerPlayer) {
                 ((ServerPlayer) playerEntity).teleportTo(((ServerLevel) toWorld), portalLocation.getX(), portalLocation.above().getY(), portalLocation.getZ(), playerEntity.xRot, playerEntity.yRot);
             }
-//            JamdExpectPlatform.teleportPlayer(playerEntity, ((ServerLevel) toWorld), portalLocation.getX(), portalLocation.above().getY(), portalLocation.getZ());
         }
     }
 
