@@ -84,19 +84,20 @@ publishing {
     }
 }
 
-curseforge {
-    if (System.getenv().unreal_curse_api_key) {
-        apiKey = System.getenv().unreal_curse_api_key
-    }
-    project {
-        id = project.property("curseforge_id")
-        changelog = "TODO"
-        changelogType = 'markdown'
-        releaseType = project.property("type")
-        addGameVersion minecraft_version
-        addGameVersion 'Forge'
+if(System.getenv().get("unreal_curse_api_key")) {
+    curseforge {
+        apiKey = System.getenv().get("unreal_curse_api_key")
+        project {
+            id = project.property("curseforge_id")
+            changelog = "TODO"
+            changelogType = 'markdown'
+            releaseType = project.property("type")
+            addGameVersion minecraft_version
+            addGameVersion 'Forge'
+        }
     }
 }
+
 
 
 
