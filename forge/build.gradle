@@ -67,37 +67,20 @@ sourcesJar {
     from zipTree(commonSources.output)
 }
 
-publishing {
-    publications {
-        mavenForge(MavenPublication) {
-            artifactId = rootProject.archives_base_name + "-" + project.name
-            artifact(remapJar) {
-                classifier null
-            }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
-        }
-    }
-
-    repositories {
-    }
-}
-
 if(System.getenv().get("unreal_curse_api_key")) {
     curseforge {
         apiKey = System.getenv().get("unreal_curse_api_key")
         project {
             id = project.property("curseforge_id")
-            changelog = "TODO"
-            changelogType = 'markdown'
             releaseType = project.property("type")
             addGameVersion minecraft_version
             addGameVersion 'Forge'
-            mainArtifact(remapJar.archiveFile.get())
+            mainArtifact(remapJar.archivePath)
             relations {
                 requiredDependency 'architectury-forge'
             }
+            changelog = "TODO"
+            changelogType = 'markdown'
         }
         options {
             debug = true
