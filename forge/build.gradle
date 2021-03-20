@@ -94,6 +94,9 @@ if(System.getenv().get("unreal_curse_api_key")) {
             releaseType = project.property("type")
             addGameVersion minecraft_version
             addGameVersion 'Forge'
+            relations {
+                requiredDependency 'architectury-forge'
+            }
         }
     }
 }

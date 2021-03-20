@@ -18,7 +18,7 @@ jobs:
           unreal_curse_api_key: ${{ secrets.UNREAL_CURSE_API_KEY }}
         run: |
           chmod +x gradlew
-          ./gradlew forge:build forge:curseforgePublish
+          ./gradlew forge:build forge:curseforge
       - uses: actions/upload-artifact@v2
         with:
           name: Artifacts
