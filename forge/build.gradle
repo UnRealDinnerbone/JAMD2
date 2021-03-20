@@ -85,7 +85,9 @@ publishing {
 }
 
 curseforge {
-    if (System.getenv().unreal_curse_api_key) apiKey = System.getenv().unreal_curse_api_key
+    if (System.getenv().unreal_curse_api_key) {
+        apiKey = System.getenv().unreal_curse_api_key
+    }
     project {
         id = project.property("curseforge_id")
         changelog = "TODO"
