@@ -4,9 +4,7 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v1
       - name: Set up JDK 1.8
@@ -23,3 +21,6 @@ jobs:
         with:
           name: Artifacts
           path: build/libs/
+
+
+
