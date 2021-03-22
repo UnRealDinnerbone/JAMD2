@@ -81,6 +81,9 @@ if(System.getenv().get("unreal_curse_api_key")) {
             }
             changelog = "TODO"
             changelogType = 'markdown'
+            afterEvaluate {
+                uploadTask.dependsOn("remapJar")
+            }
         }
         options {
             debug = true
