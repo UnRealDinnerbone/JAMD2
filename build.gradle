@@ -4,7 +4,7 @@ plugins {
     id "com.matthewprenger.cursegradle" version "1.4.0" apply false
 }
 
-//apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/master/generic/markdown-git-changelog.gradle'
+apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/master/generic/markdown-git-changelog.gradle'
 apply from: "https://raw.githubusercontent.com/UnRealDinnerbone/GradleHelpers/master/version.gradle"
 
 task curseforgePublish
@@ -35,6 +35,9 @@ allprojects {
     archivesBaseName = rootProject.archives_base_name
     version = getVersionNumber();
     group = rootProject.maven_group
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 
     repositories {
     }
