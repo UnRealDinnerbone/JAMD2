@@ -97,7 +97,7 @@ curseforge {
         id = project.property("curseforge_id")
         changelog = getGitChangelog()
         changelogType = 'markdown'
-        releaseType = project.property("type")
+        releaseType = parent.property("type")
         addGameVersion minecraft_version
         addGameVersion 'Forge'
         relations {
