@@ -94,7 +94,7 @@ curseforge {
         apiKey = System.getenv().get('unreal_curse_api_key')
     }
     project {
-        id = project.property("curseforge_id")
+        id = parent.property("curseforge_id")
         changelog = getGitChangelog()
         changelogType = 'markdown'
         releaseType = parent.property("type")
