@@ -99,13 +99,12 @@ curseforge {
         id = parent.property("curseforge_id")
         changelog = getGitChangelog()
         changelogType = 'markdown'
-        println(parent.property("type") + parent.property("curseforge_id"))
         releaseType = parent.property("type")
         addGameVersion minecraft_version
         addGameVersion 'Forge'
-        relations {
-            requiredDependency 'architectury-forge'
-        }
+//        relations {
+//            requiredDependency 'architectury-forge'
+//        }
     }
 }
 
