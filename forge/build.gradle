@@ -17,17 +17,18 @@ loom {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
-    modApi "me.shedaniel:architectury-forge:${rootProject.architectury_version}"
-    modCompile "me.shedaniel.cloth:cloth-config-forge:${rootProject.cloth_config_version}"
+    forge "net.minecraftforge:forge:${parent.minecraft_version}-${parent.forge_version}"
+    modApi "me.shedaniel:architectury-forge:${parent.architectury_version}"
+    modCompile "me.shedaniel.cloth:cloth-config-forge:${parent.cloth_config_version}"
 
-    implementation(project(path: ":common")) {
+
+    implementation(project(path: parent.getProjectName("common"))) {
         transitive = false
     }
-    developmentForge(project(path: ":common")) {
+    developmentForge(project(path: parent.getProjectName("common"))) {
         transitive = false
     }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) {
+    shadowCommon(project(path: parent.getProjectName("common"), configuration: "transformProductionForge")) {
         transitive = false
     }
 }
@@ -62,7 +63,7 @@ java {
 }
 
 sourcesJar {
-    def commonSources = project(":common").remapSourcesJar
+    def commonSources = project(parent.getProjectName("common")).remapSourcesJar
     dependsOn commonSources
     from zipTree(commonSources.output)
 }
@@ -74,20 +75,16 @@ if(System.getenv().get("unreal_curse_api_key")) {
             id = project.property("curseforge_id")
             releaseType = project.property("type")
             addGameVersion minecraft_version
-            addGameVersion 'Forge'
+            addGameVersion "Forge"
             mainArtifact(remapJar.archivePath)
             relations {
                 requiredDependency 'architectury-forge'
             }
-            changelog = "TODO"
+            changelog = getGitChangelog()
             changelogType = 'markdown'
             afterEvaluate {
                 uploadTask.dependsOn("remapJar")
             }
-        }
-        options {
-            debug = true
-            forgeGradleIntegration = false
         }
     }
 }
@@ -95,4 +92,4 @@ if(System.getenv().get("unreal_curse_api_key")) {
 
 
 
-rootProject.tasks.getByName("curseforgePublish").dependsOn tasks.getByName("curseforge")
+parent.tasks.getByName("curseforgePublish").dependsOn tasks.getByName("curseforge")
