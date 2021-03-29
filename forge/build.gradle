@@ -89,6 +89,8 @@ sourcesJar {
 //    }
 //}
 
+println(version)
+
 curseforge {
     if (System.getenv().get('unreal_curse_api_key')){
         apiKey = System.getenv().get('unreal_curse_api_key')
@@ -97,6 +99,7 @@ curseforge {
         id = parent.property("curseforge_id")
         changelog = getGitChangelog()
         changelogType = 'markdown'
+        println(parent.property("type") + parent.property("curseforge_id"))
         releaseType = parent.property("type")
         addGameVersion minecraft_version
         addGameVersion 'Forge'
