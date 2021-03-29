@@ -4,13 +4,13 @@ plugins {
     id "com.matthewprenger.cursegradle" version "1.4.0" apply false
 }
 
-apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/master/generic/markdown-git-changelog.gradle'
+apply from: "https://unreal.codes/2021/3/29/U5UCB1617036408458-testchangelog.gradle"
 apply from: "https://raw.githubusercontent.com/UnRealDinnerbone/GradleHelpers/master/version.gradle"
 
 task curseforgePublish
 
 architectury {
-    minecraft = rootProject.minecraft_version
+    minecraft = project.minecraft_version
 }
 
 subprojects {
@@ -21,9 +21,14 @@ subprojects {
     }
 
     dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        minecraft "com.mojang:minecraft:${project.minecraft_version}"
         mappings loom.officialMojangMappings()
     }
+
+}
+
+String getProjectName(String projectName) {
+    return getRootProject().getName().equalsIgnoreCase(getProject().getName()) ? ":" + projectName : ":" + getProject().getName() + ":" + projectName
 }
 
 
@@ -32,9 +37,9 @@ allprojects {
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 
-    archivesBaseName = rootProject.archives_base_name
+    archivesBaseName = project.archives_base_name
     version = getVersionNumber();
-    group = rootProject.maven_group
+    group = project.maven_group
 
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
