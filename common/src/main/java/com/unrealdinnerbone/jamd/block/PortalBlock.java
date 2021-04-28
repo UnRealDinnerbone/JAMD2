@@ -89,6 +89,6 @@ public class PortalBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockGetter blockGetter) {
-        return new PortalTileEntity();
+        return Jamd.PORTAL_BLOCK_ENTITY.get().create();
     }
 }
