@@ -16,13 +16,6 @@ loom {
     useFabricMixin = true
 }
 
-repositories {
-    maven {
-        url = 'https://maven.creeperhost.net/maven'
-        name = "Creper Maven"
-    }
-}
-
 dependencies {
     forge "net.minecraftforge:forge:${parent.minecraft_version}-${parent.forge_version}"
     modApi "me.shedaniel:architectury-forge:${parent.architectury_version}"
