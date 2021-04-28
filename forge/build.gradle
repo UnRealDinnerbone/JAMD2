@@ -17,7 +17,10 @@ loom {
 }
 
 repositories {
-    maven = 'https://maven.creeperhost.net/maven'
+    maven {
+        url = 'https://maven.creeperhost.net/maven'
+        name = "Creper Maven"
+    }
 }
 
 dependencies {
