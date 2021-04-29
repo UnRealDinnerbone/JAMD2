@@ -79,9 +79,9 @@ curseforge {
         releaseType = parent.property("type")
         addGameVersion minecraft_version
         addGameVersion 'Forge'
-//        relations {
-//            requiredDependency 'architectury-forge'
-//        }
+        relations {
+            requiredDependency 'architectury-forge'
+        }
     }
 }
 
