@@ -68,30 +68,9 @@ sourcesJar {
     from zipTree(commonSources.output)
 }
 
-if(System.getenv().get("unreal_curse_api_key")) {
-    curseforge {
-        apiKey = System.getenv().get("unreal_curse_api_key")
-        project {
-            id = project.property("curseforge_id")
-            releaseType = project.property("type")
-            addGameVersion minecraft_version
-            addGameVersion "Forge"
-            mainArtifact(remapJar.archivePath)
-            relations {
-                requiredDependency 'architectury-forge'
-            }
-            changelog = getGitChangelog()
-            changelogType = 'markdown'
-            afterEvaluate {
-                uploadTask.dependsOn("remapJar")
-            }
-        }
-    }
-}
-
 curseforge {
-    if (System.getenv().get('unreal_curse_api_key')){
-        apiKey = System.getenv().get('unreal_curse_api_key')
+    if (System.getenv().get('UNREAL_CURSE_API_KEY')){
+        apiKey = System.getenv().get('UNREAL_CURSE_API_KEY')
     }
     project {
         id = parent.property("curseforge_id")
